@@ -40,3 +40,20 @@ class FileUploaded(BaseModel):
     folder: str
     filename: str
     url: str
+
+
+class FolderDeleted(BaseModel):
+    message: str
+    folder: str
+
+
+class FileDeleted(BaseModel):
+    message: str
+    folder: str
+    filename: str
+
+
+class FileInfo(BaseModel):
+    folder: str
+    filename: str
+    url: str

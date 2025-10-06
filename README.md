@@ -27,17 +27,28 @@ curl -X POST http://localhost:8000/folders -H "Content-Type: application/json" -
 # Listar carpetas
 curl http://localhost:8000/folders
 
+# Listar archivos de una carpeta
+curl http://localhost:8000/folders/reportes/files
+
 # Subir imagen
 curl -X POST http://localhost:8000/upload \
      -F "folder=reportes" \
      -F "filename=incidente_2024" \
      -F "file=@/ruta/al/archivo.jpg"
+
+# Eliminar archivo (sin extensión)
+curl -X DELETE http://localhost:8000/folders/reportes/files/incidente_2024
+
+# Eliminar carpeta completa
+curl -X DELETE http://localhost:8000/folders/reportes
 ```
 La respuesta de subida incluye la URL pública (`url`) que podrás abrir directamente.
 
 ## Estilo y validaciones
 - Nombres de carpetas permitidos: letras, números, `_` y `-`.
 - `filename` no incluye extensión; el servicio reutiliza la del archivo subido y la valida con `ALLOWED_EXTENSIONS`.
+- El listado de `/folders/<folder>/files` devuelve cada archivo con su nombre (incluida extensión) y la URL servible en `/static`.
+- Para eliminar un archivo basta proporcionar el nombre base (`/folders/<folder>/files/<nombre>`); si existen varias extensiones con el mismo nombre, obtendrás un 409 de conflicto.
 - Los ficheros se guardan en `static/images/<carpeta>/<filename>.<ext>` y se sirven desde `/static/...`.
 
 ## Despliegue con Docker
