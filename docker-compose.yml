@@ -7,7 +7,7 @@ services:
     env_file:
       - .env
     ports:
-      - "${UVICORN_PORT:-8000}:${UVICORN_PORT:-8000}"
+      - "127.0.0.1:${UVICORN_PORT:-8000}:${UVICORN_PORT:-8000}"
     volumes:
       - ./static:/app/static
     restart: unless-stopped

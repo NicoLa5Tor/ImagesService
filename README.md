@@ -51,7 +51,8 @@ docker compose logs -f
 # Detener
 docker compose down
 ```
-El servicio publica `UVICORN_PORT` (8000 por defecto) y persiste las imágenes montando la carpeta local `static/`. En producción, actualiza `.env` o usa `docker compose --env-file` para inyectar configuraciones específicas (por ejemplo el archivo `.env.example.production`).
+El contenedor escucha en `UVICORN_PORT` (8000 por defecto) y Docker Compose lo publica sólo en `127.0.0.1`, usando el mismo valor definido en tu `.env`. Las imágenes persisten gracias al volumen `./static:/app/static`.
+Para entornos productivos puedes crear un `.env` específico o invocar `docker compose --env-file .env.example.production up` para ajustar host, puerto y extensiones permitidas.
 
 ## Estructura del proyecto
 ```

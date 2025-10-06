@@ -22,12 +22,7 @@ RUN pip install --no-cache-dir --upgrade pip \
 COPY . .
 
 # Expose port configured via environment (fallback 8000)
-EXPOSE 8000
-
-# Default environment variables (can be overridden)
-ENV UVICORN_HOST=0.0.0.0 \
-    UVICORN_PORT=8000 \
-    UVICORN_RELOAD=false
+EXPOSE 5080
 
 # Command to run the application with uvicorn
-CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${UVICORN_PORT:-8000}"]
+CMD ["sh", "-c", "uvicorn main:app --host ${UVICORN_HOST:-0.0.0.0} --port ${UVICORN_PORT:-8000}"]
