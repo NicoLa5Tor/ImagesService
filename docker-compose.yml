@@ -1,13 +1,19 @@
 version: "3.9"
 
 services:
-  images-service:
+  images:
     build: .
-    container_name: images-service
+    container_name: images
     env_file:
       - .env
-    ports:
-      - "127.0.0.1:${UVICORN_PORT:-8000}:${UVICORN_PORT:-8000}"
+    expose:
+      - "${UVICORN_PORT:-8000}"
     volumes:
-      - ./static:/app/static
+      - /opt/volumes/rescue-logs/images-service:/app/static
     restart: unless-stopped
+    networks:
+      - rescue-network
+
+networks:
+  rescue-network:
+    external: true
