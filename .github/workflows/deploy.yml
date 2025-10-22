@@ -32,4 +32,4 @@ jobs:
             git fetch --prune
             git reset --hard origin/main
             docker-compose pull
-            docker-compose up -d --remove-orphans images-service
+            docker-compose up -d --remove-orphans images
