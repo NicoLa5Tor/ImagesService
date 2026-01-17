@@ -24,7 +24,6 @@ FileName = Annotated[
     ),
 ]
 
-
 class FolderCreate(BaseModel):
     name: FolderName
 
