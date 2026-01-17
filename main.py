@@ -24,8 +24,6 @@ class DownloadStaticFiles(StaticFiles):
             response.headers.setdefault("content-disposition", f'attachment; filename="{filename}"')
             return response
 
-        request = Request(scope)
-        file_url = str(request.url.include_query_params(raw=1))
         filename = Path(path).name.replace('"', "")
         html = f"""<!doctype html>
 <html lang="es">
@@ -104,10 +102,15 @@ class DownloadStaticFiles(StaticFiles):
       <div class="hint">Por favor no cierres esta pestaña.</div>
     </main>
     <script>
-      const fileUrl = {file_url!r};
       const filename = {filename!r};
       const bar = document.getElementById("bar");
       const status = document.getElementById("status");
+
+      function buildFileUrl() {{
+        const url = new URL(window.location.href);
+        url.searchParams.set("raw", "1");
+        return url.toString();
+      }}
 
       function formatBytes(bytes) {{
         const mb = bytes / (1024 * 1024);
@@ -115,6 +118,7 @@ class DownloadStaticFiles(StaticFiles):
       }}
 
       async function startDownload() {{
+        const fileUrl = buildFileUrl();
         try {{
           const response = await fetch(fileUrl);
           if (!response.ok || !response.body) {{
@@ -151,7 +155,8 @@ class DownloadStaticFiles(StaticFiles):
           link.remove();
           URL.revokeObjectURL(blobUrl);
         }} catch (error) {{
-          status.textContent = "Error al descargar.";
+          const message = error && error.message ? error.message : "Error al descargar.";
+          status.textContent = message;
         }}
       }}
 
