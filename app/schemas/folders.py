@@ -24,6 +24,17 @@ FileName = Annotated[
     ),
 ]
 
+FileFullName = Annotated[
+    str,
+    Field(
+        min_length=1,
+        max_length=160,
+        pattern=r"^[\w.-]+$",
+        strip_whitespace=True,
+        description="Nombre completo del archivo con extensión (letras, números, guiones, puntos y guiones bajos)",
+    ),
+]
+
 
 class FolderCreate(BaseModel):
     name: FolderName
@@ -57,3 +68,4 @@ class FileInfo(BaseModel):
     folder: str
     filename: str
     url: str
+    download_url: str | None = None

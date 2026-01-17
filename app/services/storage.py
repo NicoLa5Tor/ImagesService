@@ -121,3 +121,18 @@ class StorageService:
         file_path = matches[0]
         file_path.unlink()
         return file_path
+
+    def get_file(self, folder_name: str, filename: str) -> Path:
+        target_dir = self._resolve_folder(folder_name)
+        file_path = (target_dir / filename).resolve()
+        if not file_path.is_relative_to(target_dir):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid file path.",
+            )
+        if not file_path.is_file():
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"File '{filename}' not found in folder '{folder_name}'.",
+            )
+        return file_path

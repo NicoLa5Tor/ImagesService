@@ -39,6 +39,9 @@ curl -X POST http://localhost:8000/upload \
 # Eliminar archivo (sin extensión)
 curl -X DELETE http://localhost:8000/folders/reportes/files/incidente_2024
 
+# Descargar APK directamente
+curl -O -L http://localhost:8000/folders/reportes/files/app-release.apk/download
+
 # Eliminar carpeta completa
 curl -X DELETE http://localhost:8000/folders/reportes
 ```
