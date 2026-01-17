@@ -2,6 +2,7 @@ from typing import List
 
 from fastapi import APIRouter, Depends, Path, Request
 
+from app.core.config import get_settings
 from app.core.dependencies import get_storage_service
 from app.schemas.folders import (
     FileDeleted,
@@ -48,12 +49,18 @@ async def list_folder_files(
     folder_name: FolderName = Path(..., description="Nombre de la carpeta"),
     storage: StorageService = Depends(get_storage_service),
 ) -> List[FileInfo]:
+    settings = get_settings()
+    base_url = settings.public_base_url_value.rstrip("/") if settings.public_base_url_value else ""
     files = storage.list_files(folder_name)
     return [
         FileInfo(
             folder=folder_name,
             filename=file_path.name,
-            url=str(request.url_for("static", path=f"images/{folder_name}/{file_path.name}")),
+            url=(
+                f"{base_url}/static/images/{folder_name}/{file_path.name}"
+                if base_url
+                else str(request.url_for("static", path=f"images/{folder_name}/{file_path.name}"))
+            ),
         )
         for file_path in files
     ]

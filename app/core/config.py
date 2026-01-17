@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     allow_methods: str = Field(..., env="ALLOW_METHODS")
     allow_headers: str = Field(..., env="ALLOW_HEADERS")
     allowed_extensions: str = Field('jpg,jpeg,png', env="ALLOWED_EXTENSIONS")
+    public_base_url: str = Field("", env="PUBLIC_BASE_URL")
     uvicorn_host: str = Field(..., env="UVICORN_HOST")
     uvicorn_port: int = Field(..., env="UVICORN_PORT")
     uvicorn_reload: bool = Field(..., env="UVICORN_RELOAD")
@@ -44,6 +45,10 @@ class Settings(BaseSettings):
             if candidate not in normalized:
                 normalized.append(candidate)
         return normalized
+
+    @property
+    def public_base_url_value(self) -> str:
+        return self.public_base_url.strip()
 
     @property
     def base_dir(self) -> Path:
