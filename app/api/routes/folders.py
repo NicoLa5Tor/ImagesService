@@ -1,14 +1,12 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, Path, Request
-from fastapi.responses import FileResponse
+from fastapi import APIRouter, Depends, Path, Request
 
 from app.core.dependencies import get_storage_service
 from app.schemas.folders import (
     FileDeleted,
     FileInfo,
     FileName,
-    FileFullName,
     FolderCreate,
     FolderCreated,
     FolderDeleted,
@@ -56,17 +54,6 @@ async def list_folder_files(
             folder=folder_name,
             filename=file_path.name,
             url=str(request.url_for("static", path=f"images/{folder_name}/{file_path.name}")),
-            download_url=(
-                str(
-                    request.url_for(
-                        "download_file",
-                        folder_name=folder_name,
-                        filename=file_path.name,
-                    )
-                )
-                if file_path.suffix.lower() == ".apk"
-                else None
-            ),
         )
         for file_path in files
     ]
@@ -87,30 +74,6 @@ async def delete_file(
         message="File deleted",
         folder=folder_name,
         filename=deleted_path.name,
-    )
-
-
-@router.get(
-    "/{folder_name}/files/{filename}/download",
-    response_class=FileResponse,
-    status_code=200,
-    name="download_file",
-)
-async def download_file(
-    folder_name: FolderName = Path(..., description="Nombre de la carpeta"),
-    filename: FileFullName = Path(..., description="Nombre del archivo con extensión"),
-    storage: StorageService = Depends(get_storage_service),
-) -> FileResponse:
-    if not filename.lower().endswith(".apk"):
-        raise HTTPException(
-            status_code=400,
-            detail="Only APK files support direct download.",
-        )
-    file_path = storage.get_file(folder_name, filename)
-    return FileResponse(
-        path=file_path,
-        media_type="application/vnd.android.package-archive",
-        filename=file_path.name,
     )
 
 
