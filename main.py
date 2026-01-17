@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.requests import Request
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 
 from app.api.routes import api_router
 from app.core.config import get_settings
@@ -179,6 +180,7 @@ def create_app() -> FastAPI:
         allow_methods=settings.cors_allow_methods,
         allow_headers=settings.cors_allow_headers,
     )
+    app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
     app.mount("/static", DownloadStaticFiles(directory=settings.static_path), name="static")
 
