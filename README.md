@@ -7,6 +7,12 @@ Servicio FastAPI para gestionar carpetas e imágenes locales bajo `static/images
 - pip y virtualenv (opcional pero recomendado)
 - Docker y Docker Compose (para despliegue contenedorizado)
 
+## Documentacion de API
+
+- Referencia completa de endpoints y errores: [docs/API_REFERENCE.md](docs/API_REFERENCE.md)
+- Swagger UI local o productivo: `/docs`
+- OpenAPI JSON: `/openapi.json`
+
 ## Configuración local
 ```bash
 python -m venv .venv

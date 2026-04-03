@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   images:
     build: .
@@ -8,12 +6,10 @@ services:
       - .env
     expose:
       - "${UVICORN_PORT:-8000}"
-    volumes:
-      - /opt/volumes/rescue-logs/images-service:/app/static
     restart: unless-stopped
     networks:
-      - rescue-network
+      - unidev_app-unidev
 
 networks:
-  rescue-network:
+  unidev_app-unidev:
     external: true
