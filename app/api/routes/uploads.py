@@ -2,6 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, File, Form, UploadFile, Request
 
+from app.core.config import get_settings
 from app.core.dependencies import get_storage_service
 from app.schemas.folders import FileUploaded, FolderName, FileName
 from app.services.storage import StorageService
@@ -27,7 +28,13 @@ async def upload_image(
     storage: StorageService = Depends(get_storage_service),
 ) -> FileUploaded:
     saved_path = await storage.save_file(folder, file, filename)
-    public_url = str(request.url_for("static", path=f"images/{folder}/{saved_path.name}"))
+    settings = get_settings()
+    base_url = settings.public_base_url_value.rstrip("/") if settings.public_base_url_value else ""
+    public_url = (
+        f"{base_url}/static/images/{folder}/{saved_path.name}"
+        if base_url
+        else str(request.url_for("static", path=f"images/{folder}/{saved_path.name}"))
+    )
     return FileUploaded(
         message='File uploaded',
         folder=folder,
